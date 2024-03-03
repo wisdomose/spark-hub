@@ -31,7 +31,7 @@ export default function BursarDashboard({
       // logout();
       router.replace("/");
     }
-  }, [loading, loggedIn]);
+  }, [loading, loggedIn,user]);
 
   if (loading) return <Loader />;
 
