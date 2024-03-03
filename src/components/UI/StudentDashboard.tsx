@@ -27,7 +27,7 @@ export default function StudentDashboard({
       logout();
       router.replace("/");
     }
-  }, [loading, loggedIn]);
+  }, [loading, loggedIn,user]);
 
   if (loading) return <Loader />;
 

@@ -1,4 +1,5 @@
 "use client";
+import Loader from "@/components/Loader";
 import BursarDashboard from "@/components/UI/BursarDashboard";
 import useFetcher from "@/hooks/useFetcher";
 import HostelService from "@/services/Hostel";
@@ -22,6 +23,8 @@ export default function DashboardPage() {
     studentCountFetcher.wrapper(student.count);
     potterCountFetcher.wrapper(potter.count);
   }, [loading]);
+
+  if (loading) return <Loader />;
   return (
     <BursarDashboard active="dashboard">
       <main>
@@ -39,7 +42,6 @@ export default function DashboardPage() {
             <p className="font-semibold text-2xl">{potterCountFetcher.data}</p>
           </div>
         </div>
-        
       </main>
     </BursarDashboard>
   );
