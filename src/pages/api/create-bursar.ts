@@ -29,7 +29,7 @@ export default async function handler(
         : admin.initializeApp(
             {
               // TODO: don't put this in production level code
-              credential: admin.credential.cert("./public/service.json"),
+              credential: admin.credential.cert("https://spark-hub.vercel.app/service.json"),
             },
             "admin"
           );
