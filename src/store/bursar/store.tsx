@@ -59,6 +59,7 @@ export default function BursarContextProvider({
               toast.error("Failed to fetch bursar profile");
             })
             .finally(() => {
+              console.log("bursar finally")
               setLoading(false);
             });
         } else {
