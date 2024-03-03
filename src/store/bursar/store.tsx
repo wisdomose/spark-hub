@@ -51,6 +51,7 @@ export default function BursarContextProvider({
             .profile()
             .then((res) => {
               setUser(res);
+              console.log(res);
               setLoggedIn(true);
             })
             .catch((err) => {
@@ -61,6 +62,7 @@ export default function BursarContextProvider({
               setLoading(false);
             });
         } else {
+          console.log("no bursar")
           setLoggedIn(false);
           setLoading(false);
         }
