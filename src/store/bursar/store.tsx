@@ -29,10 +29,10 @@ export default function BursarContextProvider({
   const updateUser = (value: typeof user) => {
     setUser(value);
   };
-  const logout = () => {
+  const logout = async () => {
     setLoading(true);
     const auth = getAuth();
-    auth.signOut();
+    await auth.signOut();
   };
   const value = { user, loading, loggedIn, logout, updateUser };
 
@@ -41,8 +41,8 @@ export default function BursarContextProvider({
     const auth = getAuth();
 
     onAuthStateChanged(auth, (user) => {
+      console.log(user);
       if (user) {
-        console.log(user);
         (async function () {
           const bursar = new BursarService();
           await bursar
@@ -59,7 +59,6 @@ export default function BursarContextProvider({
             });
         })();
       } else {
-        console.log("No user found");
         setLoggedIn(false);
         setLoading(false);
       }
