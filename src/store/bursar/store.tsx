@@ -58,6 +58,7 @@ export default function BursarContextProvider({
             });
         })();
       } else {
+        console.log("No user found", auth)
         setLoggedIn(false);
         setLoading(false);
       }
