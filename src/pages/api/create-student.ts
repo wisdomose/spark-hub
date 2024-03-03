@@ -28,7 +28,7 @@ export default async function handler(
               // TODO: don't put this in production level code
               credential: admin.credential.cert(  process.env.NODE_ENV === "development"
               ? "./public/service.json"
-              : "/service.json"),
+              : "../service.json"),
             },
             "admin"
           );
