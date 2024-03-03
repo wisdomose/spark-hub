@@ -30,7 +30,7 @@ export default function StudentContextProvider({
     setUser(value);
   };
   const logout = () => {
-    setLoading(true)
+    setLoading(true);
     const auth = getAuth();
     auth.signOut();
   };
@@ -40,7 +40,7 @@ export default function StudentContextProvider({
   useEffect(() => {
     const auth = getAuth();
 
-    onAuthStateChanged(auth, (user) => {
+    const a = onAuthStateChanged(auth, (user) => {
       console.log(user);
 
       if (user) {
@@ -64,6 +64,8 @@ export default function StudentContextProvider({
         setLoading(false);
       }
     });
+
+    return () => a();
   }, []);
 
   return (
