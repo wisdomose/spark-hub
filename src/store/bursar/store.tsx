@@ -41,35 +41,32 @@ export default function BursarContextProvider({
   // fetch Bursar profile, set login and loading status
   useEffect(() => {
     const auth = getAuth();
-    const app = getApp();
 
-    if (app) {
-      const a = onAuthStateChanged(auth, (user) => {
+    const a = onAuthStateChanged(auth, (user) => {
+      (async function () {
         console.log(user);
         if (user) {
-          (async function () {
-            const bursar = new BursarService();
-            await bursar
-              .profile()
-              .then((res) => {
-                setUser(res);
-                setLoggedIn(true);
-              })
-              .catch((err) => {
-                toast.error("Failed to fetch bursar profile");
-              })
-              .finally(() => {
-                setLoading(false);
-              });
-          })();
+          const bursar = new BursarService();
+          await bursar
+            .profile()
+            .then((res) => {
+              setUser(res);
+              setLoggedIn(true);
+            })
+            .catch((err) => {
+              toast.error("Failed to fetch bursar profile");
+            })
+            .finally(() => {
+              setLoading(false);
+            });
         } else {
           setLoggedIn(false);
           setLoading(false);
         }
-      });
+      })();
+    });
 
-      return () => a();
-    }
+    return () => a();
   }, []);
 
   return (
