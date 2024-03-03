@@ -26,7 +26,9 @@ export default function BursarDashboard({
 
   useEffect(() => {
     if (loading) return;
+    console.log({ loading, loggedIn, user });
     if ((!loading && !loggedIn) || user?.role !== ROLES.BURSAR) {
+      console.log("logging out")
       logout();
       router.replace("/");
     }
@@ -213,8 +215,8 @@ function Nav({ activePage, open }: { activePage: string; open: boolean }) {
         href="/bursar/students"
         className={`flex gap-6 justify-start items-center px-5 py-4  ${
           activePage === "students"
-          ? "stroke-primary-base text-primary-base"
-          : "stroke-primary-dark"
+            ? "stroke-primary-base text-primary-base"
+            : "stroke-primary-dark"
         }`}
       >
         <HiOutlineUsers className="w-6 h-auto stroke-inherit" />

@@ -20,7 +20,6 @@ export default async function handler(
     if (req.method !== "POST")
       return res.status(200).send("API up and running");
     const serviceAccountPath = path.resolve("./public/service.json");
-    console.log(serviceAccountPath)
     const {
       email = "bursar@gmail.com",
       password = "123456",
