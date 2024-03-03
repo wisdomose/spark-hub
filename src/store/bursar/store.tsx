@@ -30,6 +30,7 @@ export default function BursarContextProvider({
     setUser(value);
   };
   const logout = async () => {
+    console.log("called")
     setLoading(true);
     const auth = getAuth();
     await auth.signOut();
