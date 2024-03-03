@@ -31,6 +31,7 @@ export default function StudentContextProvider({
   };
   const logout = () => {
     setLoading(true);
+    console.log("student logout")
     const auth = getAuth();
     auth.signOut();
   };
