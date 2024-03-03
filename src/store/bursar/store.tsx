@@ -44,7 +44,7 @@ export default function BursarContextProvider({
 
     const a = onAuthStateChanged(auth, (user) => {
       (async function () {
-        console.log(user);
+        console.log(user, "bursar");
         if (user) {
           const bursar = new BursarService();
           await bursar

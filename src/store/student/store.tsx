@@ -41,7 +41,7 @@ export default function StudentContextProvider({
     const auth = getAuth();
 
     const a = onAuthStateChanged(auth, (user) => {
-      console.log(user);
+      console.log(user, "student");
 
       if (user) {
         (async function () {
