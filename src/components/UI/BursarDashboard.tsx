@@ -26,9 +26,9 @@ export default function BursarDashboard({
 
   useEffect(() => {
     if (loading) return;
-    console.log({ loading, loggedIn, user });
+    // console.log({ loading, loggedIn, user });
     if ((!loading && !loggedIn) || user?.role !== ROLES.BURSAR) {
-      console.log("logging out")
+      // console.log("logging out")
       logout();
       router.replace("/");
     }
