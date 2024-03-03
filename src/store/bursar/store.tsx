@@ -40,7 +40,7 @@ export default function BursarContextProvider({
   useEffect(() => {
     const auth = getAuth();
 
-    onAuthStateChanged(auth, (user) => {
+    const a = onAuthStateChanged(auth, (user) => {
       console.log(user);
       if (user) {
         (async function () {
@@ -63,6 +63,8 @@ export default function BursarContextProvider({
         setLoading(false);
       }
     });
+
+    return () => a();
   }, []);
 
   return (
