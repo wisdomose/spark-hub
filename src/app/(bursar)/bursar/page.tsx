@@ -25,10 +25,10 @@ export default function BursarLoginPage() {
   };
 
   // init bursar
-  useEffect(() => {
-    const bursar = new BursarService();
-    bursar.init();
-  }, []);
+  // useEffect(() => {
+  //   const bursar = new BursarService();
+  //   bursar.init();
+  // }, []);
 
   useEffect(() => {
     if (!profileLoading && loggedIn) {
