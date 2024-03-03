@@ -10,6 +10,7 @@ import {
   connectFirestoreEmulator,
 } from "firebase/firestore";
 import { NextApiRequest, NextApiResponse } from "next";
+import path from "path";
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,6 +19,8 @@ export default async function handler(
   try {
     if (req.method !== "POST")
       return res.status(200).send("API up and running");
+    const serviceAccountPath = path.resolve("./public/service.json");
+    console.log(serviceAccountPath)
     const {
       email = "bursar@gmail.com",
       password = "123456",
@@ -29,9 +32,7 @@ export default async function handler(
         : admin.initializeApp(
             {
               // TODO: don't put this in production level code
-              credential: admin.credential.cert(  process.env.NODE_ENV === "development"
-              ? "./public/service.json"
-              : "../service.json"),
+              credential: admin.credential.cert(serviceAccountPath),
             },
             "admin"
           );
