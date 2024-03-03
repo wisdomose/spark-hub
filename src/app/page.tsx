@@ -15,9 +15,9 @@ import { toast } from "react-toastify";
 
 export default function HomesPage() {
   return (
-    // <StudentContextProvider>
+    <StudentContextProvider>
       <Login />
-    // </StudentContextProvider>
+    </StudentContextProvider>
   );
 }
 
@@ -26,18 +26,18 @@ function Login() {
   const [email, emailOpts] = useInput("");
   const [password, passwordOpts] = useInput("");
   const router = useRouter();
-  // const { loading: profileLoading, loggedIn } = useStudent();
+  const { loading: profileLoading, loggedIn } = useStudent();
 
   const login = async () => {
     const userService = new UserService();
     await wrapper(() => userService.login({ email, password }));
   };
 
-  // useEffect(() => {
-  //   if (!profileLoading && loggedIn) {
-  //     router.replace("/student/dashboard");
-  //   }
-  // }, [profileLoading, loggedIn]);
+  useEffect(() => {
+    if (!profileLoading && loggedIn) {
+      router.replace("/student/dashboard");
+    }
+  }, [profileLoading, loggedIn]);
 
   useEffect(() => {
     if (data) {
@@ -51,8 +51,8 @@ function Login() {
     }
   }, [error]);
 
-  // if (profileLoading) return <Loader />;
-  // if (profileLoading && loggedIn) return <Loader />;
+  if (profileLoading) return <Loader />;
+  if (profileLoading && loggedIn) return <Loader />;
 
   return (
     <main className="max-w-xl mx-auto pt-10 pb-20 px-10">
