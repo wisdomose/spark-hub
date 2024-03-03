@@ -35,43 +35,49 @@ export default function DashboardPage() {
       <main>
         <ApplyModal />
 
-        <p className="font-bold text-sm mb-2">My Hostel</p>
-        <div
-          className={`grid grid-cols-2 gap-2 max-w-sm border rounded-md p-4 w-full`}
-        >
-          <p className="text-sm">
-            <strong className="capitalize">Hostel Name</strong>
-            <br />
-            <span className="capitalize">{myHostelFetcher.data?.name}</span>
-          </p>
-          <p className="text-sm">
-            <strong className="capitalize">Potter</strong>
-            <br />
-            <span className="capitalize">
-              {myHostelFetcher.data?.potter?.displayName}
-            </span>
-          </p>
-          <p className="text-sm">
-            <strong className="capitalize">Number of rooms</strong>
-            <br />
-            {myHostelFetcher.data?.noOfRooms}
-          </p>
-          <p className="text-sm">
-            <strong className="capitalize">Persons per room</strong>
-            <br />
-            {myHostelFetcher.data?.personsPerRoom}
-          </p>
-          <p className="text-sm">
-            <strong className="capitalize">total applications</strong>
-            <br />
-            {myHostelFetcher.data?.rooms.reduce((a, b) => a + b)}
-          </p>
-          <p className="text-sm">
-            <strong className="capitalize">Room Number</strong>
-            <br />
-            {user?.room}
-          </p>
-        </div>
+        {user?.hostelId ? (
+          <>
+            <p className="font-bold text-sm mb-2">My Hostel</p>
+            <div
+              className={`grid grid-cols-2 gap-2 max-w-sm border rounded-md p-4 w-full`}
+            >
+              <p className="text-sm">
+                <strong className="capitalize">Hostel Name</strong>
+                <br />
+                <span className="capitalize">{myHostelFetcher.data?.name}</span>
+              </p>
+              <p className="text-sm">
+                <strong className="capitalize">Potter</strong>
+                <br />
+                <span className="capitalize">
+                  {myHostelFetcher.data?.potter?.displayName}
+                </span>
+              </p>
+              <p className="text-sm">
+                <strong className="capitalize">Number of rooms</strong>
+                <br />
+                {myHostelFetcher.data?.noOfRooms}
+              </p>
+              <p className="text-sm">
+                <strong className="capitalize">Persons per room</strong>
+                <br />
+                {myHostelFetcher.data?.personsPerRoom}
+              </p>
+              <p className="text-sm">
+                <strong className="capitalize">total applications</strong>
+                <br />
+                {myHostelFetcher.data?.rooms.reduce((a, b) => a + b)}
+              </p>
+              <p className="text-sm">
+                <strong className="capitalize">Room Number</strong>
+                <br />
+                {user?.room}
+              </p>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
 
         {/* room mates */}
         <p className="font-bold text-sm mb-2 mt-10">Your room mates</p>

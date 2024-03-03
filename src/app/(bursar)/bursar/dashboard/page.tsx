@@ -24,7 +24,7 @@ export default function DashboardPage() {
     potterCountFetcher.wrapper(potter.count);
   }, [loading]);
 
-  if (loading) return <Loader />;
+  
   return (
     <BursarDashboard active="dashboard">
       <main>

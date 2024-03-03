@@ -8,16 +8,17 @@ import BursarService from "@/services/Bursar";
 import UserService, { LoginResponse } from "@/services/User";
 import StudentContextProvider from "@/store/student/store";
 import useStudent from "@/store/student/useStudent";
+import { ROLES } from "@/types/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function HomesPage() {
   return (
-    <StudentContextProvider>
-      <Login />
-    </StudentContextProvider>
+    // <StudentContextProvider>
+    <Login />
+    // </StudentContextProvider>
   );
 }
 
@@ -26,24 +27,33 @@ function Login() {
   const [email, emailOpts] = useInput("");
   const [password, passwordOpts] = useInput("");
   const router = useRouter();
-  const { loading: profileLoading, loggedIn } = useStudent();
+  // const { loading: profileLoading, loggedIn } = useStudent();
+  const [role, setRole] = useState<ROLES>(ROLES["STUDENT"]);
+
+  const updateRole = (role: ROLES) => {
+    setRole(role);
+  };
 
   const login = async () => {
     const userService = new UserService();
     await wrapper(() => userService.login({ email, password }));
   };
 
-  useEffect(() => {
-    if (!profileLoading && loggedIn) {
-      router.replace("/student/dashboard");
-    }
-  }, [profileLoading, loggedIn]);
+  // useEffect(() => {
+  //   if (!profileLoading && loggedIn) {
+  //     router.replace("/student/dashboard");
+  //   }
+  // }, [profileLoading, loggedIn]);
 
   useEffect(() => {
     if (data) {
-      router.replace("/student/dashboard");
+      router.replace(
+        role === ROLES["POTTER"]
+          ? "/potter/hostel"
+          : `/${role.toLowerCase()}/dashboard`
+      );
     }
-  }, [data]);
+  }, [data, role]);
 
   useEffect(() => {
     if (error) {
@@ -51,12 +61,14 @@ function Login() {
     }
   }, [error]);
 
-  if (profileLoading) return <Loader />;
-  if (profileLoading && loggedIn) return <Loader />;
+  // if (profileLoading) return <Loader />;
+  // if (profileLoading && loggedIn) return <Loader />;
 
   return (
     <main className="max-w-xl mx-auto pt-10 pb-20 px-10">
-      <h1 className="text-2xl font-medium text-center">Student Login</h1>
+      <h1 className="text-2xl font-medium text-center capitalize">
+        {role.toLowerCase()} Login
+      </h1>
 
       <form
         className="flex flex-col gap-5 mt-10"
@@ -88,22 +100,51 @@ function Login() {
           loading={loading || !!data}
           block
         />
-
-        <p className="text-center mt-5">
-          Not a student?
-          <br />
-          <br />
-          <Link href="/bursar/" className="text-primary-base">
-            sign in as bursar
-          </Link>
-          <br />
-          or
-          <br />
-          <Link href="/potter/" className="text-primary-base">
-            sign in as potter
-          </Link>
-        </p>
       </form>
+      <p className="text-center mt-5">
+        Not a student?
+        <br />
+        <br />
+        sign in as{" "}
+        {role !== ROLES["BURSAR"] && (
+          <>
+            <button
+              onClick={() => updateRole(ROLES["BURSAR"])}
+              // href="/bursar/"
+              className="text-primary-base"
+            >
+              bursar
+            </button>{" "}
+            or{" "}
+          </>
+        )}
+        {role !== ROLES["STUDENT"] && (
+          <>
+            <button
+              onClick={() => updateRole(ROLES["STUDENT"])}
+              // href="/potter/"
+              className="text-primary-base"
+            >
+              student
+            </button>{" "}
+            or{" "}
+          </>
+        )}
+        {/* <br />
+        or
+        <br /> */}
+        {role !== ROLES["POTTER"] && (
+          <>
+            <button
+              onClick={() => updateRole(ROLES["POTTER"])}
+              // href="/potter/"
+              className="text-primary-base"
+            >
+              a potter
+            </button>
+          </>
+        )}
+      </p>
     </main>
   );
 }

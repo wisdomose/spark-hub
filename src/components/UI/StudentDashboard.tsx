@@ -29,7 +29,7 @@ export default function StudentDashboard({
     }
   }, [loading, loggedIn,user]);
 
-  if (loading) return <Loader />;
+  if (loading||!loggedIn) return <Loader />;
 
   return (
     <main className="h-screen max-h-screen overflow-hidden grid max-md:grid-rows-[max-content_1fr] md:grid-cols-[max-content_1fr] relative">

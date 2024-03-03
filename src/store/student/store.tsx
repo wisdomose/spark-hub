@@ -31,7 +31,6 @@ export default function StudentContextProvider({
   };
   const logout = () => {
     setLoading(true);
-    console.log("student logout")
     const auth = getAuth();
     auth.signOut();
   };
@@ -42,8 +41,6 @@ export default function StudentContextProvider({
     const auth = getAuth();
 
     const a = onAuthStateChanged(auth, (user) => {
-      console.log(user, "student");
-
       if (user) {
         (async function () {
           const student = new StudentService();
@@ -66,7 +63,7 @@ export default function StudentContextProvider({
       }
     });
 
-    return () => a();
+    return () => {a()};
   }, []);
 
   return (
