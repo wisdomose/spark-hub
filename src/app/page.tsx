@@ -1,42 +1,84 @@
 "use client";
 import Button from "@/components/Button";
+import Checkbox from "@/components/Checkbox";
 import Input from "@/components/Input";
-import Loader from "@/components/Loader";
 import useFetcher from "@/hooks/useFetcher";
-import useInput from "@/hooks/useInput";
 import BursarService from "@/services/Bursar";
-import UserService, { LoginResponse } from "@/services/User";
-import StudentContextProvider from "@/store/student/store";
-import useStudent from "@/store/student/useStudent";
-import { ROLES } from "@/types/types";
+import ManagerService from "@/services/Manager";
+import StudentService from "@/services/Student";
+import { Student } from "@/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function HomesPage() {
-  return (
-    // <StudentContextProvider>
-    <Login />
-    // </StudentContextProvider>
-  );
-}
+  const {
+    wrapper,
+    loading,
+    data: createData,
+    error,
+  } = useFetcher<Student | null>(null);
+  const [data, setData] = useState({
+    displayName: "",
+    email: "",
+    password: "",
+    trackNo: "",
+    gender: "",
+    DOB: new Date(),
+    dept: "",
+    level: "",
+    guardian: "",
+    phoneNo: "",
+    guardianPhone: "",
+  });
 
-function Login() {
-  const { wrapper, data, loading, error } = useFetcher<LoginResponse>();
-  const [email, emailOpts] = useInput("");
-  const [password, passwordOpts] = useInput("");
+  const updateData =
+    (key: keyof typeof data) => (e: ChangeEvent<HTMLInputElement>) => {
+      setData((state) => {
+        const newState = {
+          ...state,
+          [key]: e.target.value,
+        };
+        return { ...newState };
+      });
+    };
+
   const router = useRouter();
-  // const { loading: profileLoading, loggedIn } = useStudent();
-  const [role, setRole] = useState<ROLES>(ROLES["STUDENT"]);
 
-  const updateRole = (role: ROLES) => {
-    setRole(role);
-  };
+  const signup = async () => {
+    const {
+      displayName,
+      email,
+      password,
+      trackNo,
+      gender,
+      DOB,
+      dept,
+      level,
+      guardian,
+      phoneNo,
+      guardianPhone,
+    } = data;
+    const disabled =
+      !displayName ||
+      !email ||
+      !password ||
+      !trackNo ||
+      !gender ||
+      !DOB ||
+      !dept ||
+      !level ||
+      !guardian ||
+      !phoneNo ||
+      !guardianPhone;
 
-  const login = async () => {
-    const userService = new UserService();
-    await wrapper(() => userService.login({ email, password }));
+    if (disabled) {
+      toast.error("Some fields are missing");
+      return;
+    }
+    const studentService = new StudentService();
+    await wrapper(() => studentService.signUp({ ...data }));
   };
 
   // useEffect(() => {
@@ -46,14 +88,17 @@ function Login() {
   // }, [profileLoading, loggedIn]);
 
   useEffect(() => {
-    if (data) {
-      router.replace(
-        role === ROLES["POTTER"]
-          ? "/potter/hostel"
-          : `/${role.toLowerCase()}/dashboard`
-      );
+    const bursar = new BursarService();
+    const manager = new ManagerService();
+    Promise.all([bursar.init(), manager.init()]);
+  }, []);
+
+  useEffect(() => {
+    if (createData) {
+      router.push("/login");
+      toast.success("Signup complete");
     }
-  }, [data, role]);
+  }, [createData]);
 
   useEffect(() => {
     if (error) {
@@ -67,19 +112,20 @@ function Login() {
   return (
     <main className="max-w-xl mx-auto pt-10 pb-20 px-10">
       <h1 className="text-2xl font-medium text-center capitalize">
-        {role.toLowerCase()} Login
+        Student Signup
       </h1>
 
       <form
         className="flex flex-col gap-5 mt-10"
         onSubmit={(e) => {
           e.preventDefault();
-          login();
+          signup();
         }}
       >
         <Input
           required
-          {...emailOpts}
+          value={data.email}
+          onChange={updateData("email")}
           label="Email"
           type="email"
           id="email"
@@ -87,63 +133,111 @@ function Login() {
         />
         <Input
           required
-          {...passwordOpts}
+          value={data.phoneNo}
+          onChange={updateData("phoneNo")}
+          label="Phone number"
+          type="text"
+          id="tel"
+        />
+        <Input
+          required
+          value={data.password}
+          onChange={updateData("password")}
           label="Password"
           type="password"
-          id="password"
+          id="new-password"
           placeholder="passsword"
         />
-
-        <Button
-          type="submit"
-          label="Sign In"
-          loading={loading || !!data}
-          block
+        <Input
+          required
+          value={data.displayName}
+          onChange={updateData("displayName")}
+          label="Fullname"
+          type="text"
+          id="Fullname"
+          placeholder="John Doe"
         />
+        <Input
+          required
+          value={data.trackNo}
+          onChange={updateData("trackNo")}
+          label="Track number"
+          type="text"
+          id="track-number"
+        />
+        <Checkbox
+          label="Gender"
+          options={["male", "female"]}
+          checked={[data.gender]}
+          name="gender"
+          required
+          onChange={(e) => {
+            setData((s) => ({ ...s, gender: e }));
+          }}
+        />
+        <Input
+          required
+          // @ts-ignore
+          value={data.DOB}
+          onChange={updateData("DOB")}
+          label="Date of birth"
+          type="date"
+          id="dob"
+        />
+        <Input
+          required
+          value={data.dept}
+          onChange={updateData("dept")}
+          label="Department"
+          type="text"
+          id="department"
+        />
+        <Checkbox
+          label="Level"
+          options={["100", "200", "300", "400", "500", "600", "700"]}
+          checked={[data.level]}
+          name="level"
+          required
+          onChange={(e) => {
+            setData((s) => ({ ...s, level: e }));
+          }}
+        />
+        <Input
+          required
+          value={data.guardian}
+          onChange={updateData("guardian")}
+          label="Name of guardian"
+          type="text"
+          id="guardian-name"
+        />
+        <Input
+          required
+          value={data.guardianPhone}
+          onChange={updateData("guardianPhone")}
+          label="Guardian's phone number"
+          type="text"
+          id="guardian-phone"
+        />
+        {/* <Input
+          required
+          value={data.trackNo}
+          onChange={updateData("trackNo")}
+          label="Track number"
+          type="text"
+          id="track-number"
+        /> */}
+
+        <Button type="submit" label="Sign In" loading={loading} block />
       </form>
+
       <p className="text-center mt-5">
-        Not a student?
-        <br />
-        <br />
-        sign in as{" "}
-        {role !== ROLES["BURSAR"] && (
-          <>
-            <button
-              onClick={() => updateRole(ROLES["BURSAR"])}
-              // href="/bursar/"
-              className="text-primary-base"
-            >
-              bursar
-            </button>{" "}
-            or{" "}
-          </>
-        )}
-        {role !== ROLES["STUDENT"] && (
-          <>
-            <button
-              onClick={() => updateRole(ROLES["STUDENT"])}
-              // href="/potter/"
-              className="text-primary-base"
-            >
-              student
-            </button>{" "}
-            or{" "}
-          </>
-        )}
-        {/* <br />
-        or
-        <br /> */}
-        {role !== ROLES["POTTER"] && (
-          <>
-            <button
-              onClick={() => updateRole(ROLES["POTTER"])}
-              // href="/potter/"
-              className="text-primary-base"
-            >
-              a potter
-            </button>
-          </>
-        )}
+        Already have an account?{" "}
+        <Link
+          href="/login/"
+          className="text-primary-base"
+        >
+          Login here
+        </Link>
       </p>
     </main>
   );

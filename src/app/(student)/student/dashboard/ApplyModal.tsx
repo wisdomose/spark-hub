@@ -1,11 +1,13 @@
 "use client";
 
 import Button from "@/components/Button";
+import Spinner from "@/components/Spinner";
 import useFetcher from "@/hooks/useFetcher";
 import HostelService from "@/services/Hostel";
 import useStudent from "@/store/student/useStudent";
 import { Hostel } from "@/types";
 import { Dialog } from "@headlessui/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -15,6 +17,7 @@ export default function ApplyModal() {
   const hostelFetcher = useFetcher<Hostel[]>([]);
   let [hostelId, setHostelId] = useState<string | undefined>();
   const { user, loading } = useStudent();
+  const router = useRouter()
 
   const toggleIsOpen = () =>
     createFetcher.loading ? null : setIsOpen((s) => !s);
@@ -40,6 +43,7 @@ export default function ApplyModal() {
   useEffect(() => {
     if (createFetcher.data) {
       toast.success("Your application has been sucessful");
+      router.refresh();
       setHostelId(undefined);
     }
   }, [createFetcher.data]);
@@ -49,7 +53,7 @@ export default function ApplyModal() {
     };
   }, [isOpen]);
 
-  if(user?.hostelId) return null
+  if (user?.hostelId) return null;
 
   return (
     <>
@@ -71,51 +75,61 @@ export default function ApplyModal() {
               <h1 className="text-2xl">Apply for accomodation</h1>
 
               <div className="grid lg:grid-cols-2 gap-5 w-full">
-                {hostelFetcher.data.map((hostel) => (
-                  <label
-                    htmlFor={hostel.id}
-                    key={hostel.id}
-                    className={`grid grid-cols-2 gap-2 border rounded-md p-4 ${
-                      hostel.id == hostelId ? "ring-primary-base ring" : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      name="hostel"
-                      id={hostel.id}
-                      checked={hostel.id === hostelId}
-                      onChange={(e) => setHostelId(hostel.id)}
-                      className="hidden"
-                    />
-                    <p className="text-sm">
-                      <strong className="capitalize">Hostel Name</strong>
-                      <br />
-                      <span className="capitalize">{hostel.name}</span>
-                    </p>
-                    <p className="text-sm">
-                      <strong className="capitalize">Potter</strong>
-                      <br />
-                      <span className="capitalize">
-                        {hostel.potter?.displayName}
-                      </span>
-                    </p>
-                    <p className="text-sm">
-                      <strong className="capitalize">Number of rooms</strong>
-                      <br />
-                      {hostel.noOfRooms}
-                    </p>
-                    <p className="text-sm">
-                      <strong className="capitalize">Persons per room</strong>
-                      <br />
-                      {hostel.personsPerRoom}
-                    </p>
-                    <p className="text-sm">
-                      <strong className="capitalize">total applications</strong>
-                      <br />
-                      {hostel.rooms.reduce((a, b) => a + b)}
-                    </p>
-                  </label>
-                ))}
+                {hostelFetcher.loading ? (
+                  <div className="mt-5 flex items-center w-full justify-center flex-col gap-4">
+                    <Spinner />
+
+                    <p className="text-gray-700 text-sm text-center">fetching hostels</p>
+                  </div>
+                ) : (
+                  hostelFetcher.data.map((hostel) => (
+                    <label
+                      htmlFor={hostel.id}
+                      key={hostel.id}
+                      className={`grid grid-cols-2 gap-2 border rounded-md p-4 ${
+                        hostel.id == hostelId ? "ring-primary-base ring" : ""
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        name="hostel"
+                        id={hostel.id}
+                        checked={hostel.id === hostelId}
+                        onChange={(e) => setHostelId(hostel.id)}
+                        className="hidden"
+                      />
+                      <p className="text-sm">
+                        <strong className="capitalize">Hostel Name</strong>
+                        <br />
+                        <span className="capitalize">{hostel.name}</span>
+                      </p>
+                      <p className="text-sm">
+                        <strong className="capitalize">Potter</strong>
+                        <br />
+                        <span className="capitalize">
+                          {hostel.potter?.displayName}
+                        </span>
+                      </p>
+                      <p className="text-sm">
+                        <strong className="capitalize">Number of rooms</strong>
+                        <br />
+                        {hostel.noOfRooms}
+                      </p>
+                      <p className="text-sm">
+                        <strong className="capitalize">Persons per room</strong>
+                        <br />
+                        {hostel.personsPerRoom}
+                      </p>
+                      <p className="text-sm">
+                        <strong className="capitalize">
+                          total applications
+                        </strong>
+                        <br />
+                        {hostel.rooms.reduce((a, b) => a + b)}
+                      </p>
+                    </label>
+                  ))
+                )}
               </div>
 
               {/* <table className="w-full mt-5">

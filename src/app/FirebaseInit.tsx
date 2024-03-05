@@ -24,14 +24,14 @@ export default function FirebaseInit({
   useEffect(() => {
     initializeApp(firebaseConfig)
 
-    // if (process.env.NODE_ENV === "development") {
-    //   const storage = getStorage();
-    //   const auth = getAuth();
-    //   const db = getFirestore();
-    //   connectStorageEmulator(storage, "localhost", 9199);
-    //   connectFirestoreEmulator(db, "localhost", 8080);
-    //   connectAuthEmulator(auth, "http://localhost:9099");
-    // }
+    if (process.env.NODE_ENV === "development") {
+      const storage = getStorage();
+      const auth = getAuth();
+      const db = getFirestore();
+      connectStorageEmulator(storage, "localhost", 9199);
+      connectFirestoreEmulator(db, "localhost", 8080);
+      connectAuthEmulator(auth, "http://localhost:9099");
+    }
     setInit(true);
   }, []);
 

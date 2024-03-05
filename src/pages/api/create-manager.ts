@@ -21,19 +21,10 @@ export default async function handler(
       return res.status(200).send("API up and running");
     const serviceAccountPath = path.resolve("./public/service.json");
     const {
-      displayName,
-      email,
-      password,
-      trackNo,
-      gender,
-      DOB,
-      dept,
-      level,
-      guardian,
-      phoneNo,
-      guardianPhone,
+      email = "manager@gmail.com",
+      password = "123456",
+      displayName = "Manager name",
     } = req.body;
-
     const admin2 =
       admin.apps.length > 0
         ? admin.app("admin")
@@ -67,33 +58,22 @@ export default async function handler(
 
     const userRecord = await getAuth(admin2).createUser({
       email,
-      emailVerified: false,
       password,
       displayName,
+      emailVerified: false,
       disabled: false,
     });
 
     const doc = {
       userId: userRecord.uid,
-      role: ROLES["STUDENT"],
-      displayName,
+      role: ROLES["MANAGER"],
       email,
+      displayName,
       profilePic: null,
-      trackNo,
-      approved: false,
-      hostelId: null,
-      room: null,
-      gender,
-      DOB,
-      dept,
-      level,
-      guardian,
-      phoneNo,
-      guardianPhone,
       timestamp: serverTimestamp(),
     };
 
-    const result = await addDoc(collection(db, COLLECTION.STUDENTS), doc);
+    const result = await addDoc(collection(db, COLLECTION.MANAGER), doc);
 
     res.status(200).json(doc);
   } catch (error: any) {

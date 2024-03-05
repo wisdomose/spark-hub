@@ -57,6 +57,7 @@ export default class HostelService {
     return new Promise<ProfileResponse>(async (resolve, reject) => {
       try {
         if (!this.user) throw new Error("You need to be logged in");
+        if (!potterId) throw new Error("You have not selected a picker");
 
         const potterCol = collection(this.db, COLLECTION.POTTERS);
         const potterDoc = doc(potterCol, potterId);
@@ -141,9 +142,12 @@ export default class HostelService {
         const student = new StudentService();
         const profile = await student.profile();
 
+        if (!profile.hostelId) resolve([]);
+
         const q = query(
           collection(this.db, COLLECTION.STUDENTS),
-          where("hostelId", "==", profile.hostelId)
+          where("hostelId", "==", profile.hostelId),
+          where("room", "==", profile.room),
         );
         const querySnapshot = await getDocs(q);
         const students: Student[] = [];

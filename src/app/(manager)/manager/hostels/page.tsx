@@ -1,9 +1,9 @@
 "use client";
-import BursarDashboard from "@/components/UI/BursarDashboard";
+import ManagerDashboard from "@/components/UI/ManagerDashboard";
 import AddHostel from "./AddHostel";
 import useFetcher from "@/hooks/useFetcher";
 import { Hostel } from "@/types";
-import useBursar from "@/store/bursar/useBursar";
+import useManager from "@/store/manager/useManager";
 import { useEffect, useState } from "react";
 import HostelService from "@/services/Hostel";
 import { toast } from "react-toastify";
@@ -12,7 +12,7 @@ import HostelTable from "@/components/UI/HostelTable";
 
 export default function HostelsPage() {
   const fetcher = useFetcher<Hostel[]>([]);
-  const { loading } = useBursar();
+  const { loading } = useManager();
   const [hostels, setHostels] = useState<Hostel[]>([]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function HostelsPage() {
     }
   }, [fetcher.data]);
   return (
-    <BursarDashboard active="hostels">
+    <ManagerDashboard active="hostels">
       <main>
         <AddHostel />
 
@@ -55,6 +55,6 @@ export default function HostelsPage() {
           <HostelTable hostels={hostels} />
         ) : null}
       </main>
-    </BursarDashboard>
+    </ManagerDashboard>
   );
 }

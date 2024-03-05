@@ -1,17 +1,17 @@
 "use client";
 import ViewComplaint from "@/app/(student)/student/complaints/ViewComplaint";
 import Spinner from "@/components/Spinner";
-import BursarDashboard from "@/components/UI/BursarDashboard";
+import ManagerDashboard from "@/components/UI/ManagerDashboard";
 import useFetcher from "@/hooks/useFetcher";
 import { formatTimestamp } from "@/lib/utils";
 import ComplaintService from "@/services/Complaint";
-import useBursar from "@/store/bursar/useBursar";
+import useManager from "@/store/manager/useManager";
 import { Complaint } from "@/types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function ComplaintsPage() {
-  const { loading, user } = useBursar();
+  const { loading, user } = useManager();
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const fetcher = useFetcher<Complaint[]>([]);
   let [isOpen, setIsOpen] = useState(false);
@@ -51,7 +51,7 @@ export default function ComplaintsPage() {
   }, [fetcher.error]);
 
   return (
-    <BursarDashboard active="complaints">
+    <ManagerDashboard active="complaints">
       <>
         <main className="max-w-lg mx-auto">
           {fetcher.loading && complaints.length === 0 ? (
@@ -102,6 +102,6 @@ export default function ComplaintsPage() {
           />
         )}
       </>
-    </BursarDashboard>
+    </ManagerDashboard>
   );
 }

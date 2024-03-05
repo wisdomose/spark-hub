@@ -1,22 +1,24 @@
 "use client";
-import useStudent from "@/store/student/useStudent";
+import useManager from "@/store/manager/useManager";
 import { ROLES } from "@/types/types";
 // import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Loader from "../Loader";
-import { BiMailSend } from "react-icons/bi";
 import { MdOutlineBedroomParent } from "react-icons/md";
+import { BiMailSend } from "react-icons/bi";
+import { FaRegUser } from "react-icons/fa";
+import { HiOutlineUsers } from "react-icons/hi";
 
-export default function StudentDashboard({
+export default function ManagerDashboard({
   active,
   children,
 }: {
   active: string;
   children: React.ReactNode;
 }) {
-  const { loading, loggedIn, user, logout } = useStudent();
+  const { loading, loggedIn, user, logout } = useManager();
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
@@ -24,7 +26,7 @@ export default function StudentDashboard({
 
   useEffect(() => {
     if (loading) return;
-    if ((!loading && !loggedIn) || user?.role !== ROLES.STUDENT) {
+    if ((!loading && !loggedIn) || user?.role !== ROLES.MANAGER) {
       logout();
       router.replace("/");
     }
@@ -175,11 +177,11 @@ export default function StudentDashboard({
 }
 
 function Nav({ activePage, open }: { activePage: string; open: boolean }) {
-  const { logout, user } = useStudent();
+  const { logout } = useManager();
   return (
     <>
       <Link
-        href="/student/dashboard"
+        href="/manager/dashboard"
         className={`flex gap-6 justify-start items-center px-5 py-4  ${
           activePage === "dashboard"
             ? "fill-primary-base text-primary-base"
@@ -207,46 +209,75 @@ function Nav({ activePage, open }: { activePage: string; open: boolean }) {
           Dashboard
         </span>
       </Link>
-      {user?.approved && (
-        <Link
-          href="/student/complaints"
-          className={`flex gap-6 justify-start items-center px-5 py-4  ${
-            activePage === "complaints"
-              ? "stroke-primary-base text-primary-base"
-              : "stroke-primary-dark"
+      <Link
+        href="/manager/students"
+        className={`flex gap-6 justify-start items-center px-5 py-4  ${
+          activePage === "students"
+            ? "stroke-primary-base text-primary-base"
+            : "stroke-primary-dark"
+        }`}
+      >
+        <HiOutlineUsers className="w-6 h-auto stroke-inherit" />
+        <span
+          className={`lg:inline-block ${
+            open ? "md:inline-block" : "md:hidden"
           }`}
         >
-          <BiMailSend className="w-6 h-6 stroke-inherit" />
-
-          <span
-            className={`lg:inline-block ${
-              open ? "md:inline-block" : "md:hidden"
-            }`}
-          >
-            Complaints
-          </span>
-        </Link>
-      )}
-      {user?.approved && user?.hostelId && (
-        <Link
-          href="/student/my-hostel"
-          className={`flex gap-6 justify-start items-center px-5 py-4  ${
-            activePage === "my-hostel"
-              ? "stroke-primary-base text-primary-base"
-              : "stroke-primary-dark"
+          Students
+        </span>
+      </Link>
+      <Link
+        href="/manager/potters"
+        className={`flex gap-6 justify-start items-center px-5 py-4  ${
+          activePage === "potters"
+            ? "stroke-primary-base text-primary-base"
+            : "stroke-primary-dark"
+        }`}
+      >
+        <FaRegUser className="w-6 h-6 stroke-inherit" />
+        <span
+          className={`lg:inline-block ${
+            open ? "md:inline-block" : "md:hidden"
           }`}
         >
-           <MdOutlineBedroomParent className="w-6 h-6 stroke-inherit" />
+          Potter
+        </span>
+      </Link>
+      <Link
+        href="/manager/hostels"
+        className={`flex gap-6 justify-start items-center px-5 py-4  ${
+          activePage === "hostels"
+            ? "stroke-primary-base text-primary-base"
+            : "stroke-primary-dark"
+        }`}
+      >
+        <MdOutlineBedroomParent className="w-6 h-6 stroke-inherit" />
+        <span
+          className={`lg:inline-block ${
+            open ? "md:inline-block" : "md:hidden"
+          }`}
+        >
+          Hostels
+        </span>
+      </Link>
+      <Link
+        href="/manager/complaints"
+        className={`flex gap-6 justify-start items-center px-5 py-4  ${
+          activePage === "complaints"
+            ? "stroke-primary-base text-primary-base"
+            : "stroke-primary-dark"
+        }`}
+      >
+        <BiMailSend className="w-6 h-6 stroke-inherit" />
 
-          <span
-            className={`lg:inline-block ${
-              open ? "md:inline-block" : "md:hidden"
-            }`}
-          >
-            My Hostel
-          </span>
-        </Link>
-      )}
+        <span
+          className={`lg:inline-block ${
+            open ? "md:inline-block" : "md:hidden"
+          }`}
+        >
+          Complaints
+        </span>
+      </Link>
       <hr className="my-5" />
       <button
         className={` flex gap-6 justify-start items-center px-5 py-4  ${

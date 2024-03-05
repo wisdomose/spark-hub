@@ -10,6 +10,9 @@ import { MdOutlineBedroomParent } from "react-icons/md";
 import { BiMailSend } from "react-icons/bi";
 import { FaRegUser } from "react-icons/fa";
 import { HiOutlineUsers } from "react-icons/hi";
+import useFetcher from "@/hooks/useFetcher";
+import BursarService from "@/services/Bursar";
+import StudentService from "@/services/Student";
 
 export default function BursarDashboard({
   active,
@@ -30,9 +33,9 @@ export default function BursarDashboard({
       logout();
       router.replace("/");
     }
-  }, [loading, loggedIn,user]);
+  }, [loading, loggedIn, user]);
 
-  if (loading||!loggedIn) return <Loader />;
+  if (loading || !loggedIn) return <Loader />;
 
   return (
     <main className="h-screen max-h-screen overflow-hidden grid max-md:grid-rows-[max-content_1fr] md:grid-cols-[max-content_1fr] relative">
@@ -178,6 +181,20 @@ export default function BursarDashboard({
 
 function Nav({ activePage, open }: { activePage: string; open: boolean }) {
   const { logout } = useBursar();
+  const fetcher = useFetcher<number>(null);
+
+  useEffect(() => {
+    const student = new StudentService();
+    fetcher.wrapper(student.countUnapproved);
+
+    const interval = setInterval(() => {
+      fetcher.wrapper(student.countUnapproved);
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   return (
     <>
       <Link
@@ -225,59 +242,13 @@ function Nav({ activePage, open }: { activePage: string; open: boolean }) {
         >
           Students
         </span>
+        {!isNaN(Number(fetcher.data)) && fetcher.data > 0 && (
+          <span className="bg-primary-dark text-white rounded-full w-6 h-6 flex items-center justify-center text-xs flex-shrink-0">
+            {fetcher.data}
+          </span>
+        )}
       </Link>
-      <Link
-        href="/bursar/potters"
-        className={`flex gap-6 justify-start items-center px-5 py-4  ${
-          activePage === "potters"
-            ? "stroke-primary-base text-primary-base"
-            : "stroke-primary-dark"
-        }`}
-      >
-        <FaRegUser className="w-6 h-6 stroke-inherit" />
-        <span
-          className={`lg:inline-block ${
-            open ? "md:inline-block" : "md:hidden"
-          }`}
-        >
-          Potter
-        </span>
-      </Link>
-      <Link
-        href="/bursar/hostels"
-        className={`flex gap-6 justify-start items-center px-5 py-4  ${
-          activePage === "hostels"
-            ? "stroke-primary-base text-primary-base"
-            : "stroke-primary-dark"
-        }`}
-      >
-        <MdOutlineBedroomParent className="w-6 h-6 stroke-inherit" />
-        <span
-          className={`lg:inline-block ${
-            open ? "md:inline-block" : "md:hidden"
-          }`}
-        >
-          Hostels
-        </span>
-      </Link>
-      <Link
-        href="/bursar/complaints"
-        className={`flex gap-6 justify-start items-center px-5 py-4  ${
-          activePage === "complaints"
-            ? "stroke-primary-base text-primary-base"
-            : "stroke-primary-dark"
-        }`}
-      >
-        <BiMailSend className="w-6 h-6 stroke-inherit" />
 
-        <span
-          className={`lg:inline-block ${
-            open ? "md:inline-block" : "md:hidden"
-          }`}
-        >
-          Complaints
-        </span>
-      </Link>
       <hr className="my-5" />
       <button
         className={` flex gap-6 justify-start items-center px-5 py-4  ${

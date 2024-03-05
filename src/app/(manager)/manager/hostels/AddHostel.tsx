@@ -4,7 +4,7 @@ import Input from "@/components/Input";
 import useFetcher from "@/hooks/useFetcher";
 import HostelService from "@/services/Hostel";
 import PotterService from "@/services/Potter";
-import useBursar from "@/store/bursar/useBursar";
+import useManager from "@/store/manager/useManager";
 import { Potter } from "@/types";
 import { Dialog } from "@headlessui/react";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -16,7 +16,7 @@ export default function AddHostel() {
     noOfRooms: 0,
     personsPerRoom: 0,
   });
-  const { loading } = useBursar();
+  const { loading } = useManager();
   let [isOpen, setIsOpen] = useState(false);
   let [potterIndex, setPotterIndex] = useState<number | undefined>();
   const createFetcher = useFetcher();
@@ -65,6 +65,10 @@ export default function AddHostel() {
     }
   }, [createFetcher.data]);
   useEffect(() => {
+    if (isOpen) {
+      const potter = new PotterService();
+      potterFetcher.wrapper(() => potter.findAll({ hasHostel: false }));
+    }
     return () => {
       setData({
         name: "",
@@ -74,13 +78,7 @@ export default function AddHostel() {
       setPotterIndex(undefined);
     };
   }, [isOpen]);
-
-  useEffect(() => {
-    if (loading) return;
-    const potter = new PotterService();
-    potterFetcher.wrapper(potter.findAll);
-  }, [loading]);
-
+  
   return (
     <>
       <Button label="Add Hostel" onClick={toggleIsOpen} size="sm" />

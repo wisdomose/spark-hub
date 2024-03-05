@@ -19,9 +19,11 @@ export default function Checkbox({
 }: Props) {
   return (
     <div className="">
-      <p className="">{label}</p>
+      <p className="block text-sm font-medium">
+        {label} {required && <span className="text-red-500">*</span>}
+      </p>
 
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-2 mt-2">
         {options.map((option) => (
           <label
             key={option.replaceAll(" ", "-")}
@@ -32,7 +34,7 @@ export default function Checkbox({
               type="checkbox"
               name={name}
               id={option.replaceAll(" ", "-")}
-              required={required}
+              // required={required}
               disabled={disabled}
               checked={checked.includes(option)}
               onChange={(e) => onChange(option)}

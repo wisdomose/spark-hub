@@ -11,11 +11,13 @@ enum ROLES {
   STUDENT = "STUDENT",
   POTTER = "POTTER",
   BURSAR = "BURSAR",
+  MANAGER = "MANAGER",
 }
 
 enum COLLECTION {
   STUDENTS = "students",
   BURSAR = "bursar",
+  MANAGER = "manager",
   POTTERS = "potters",
   HOSTELS = "hostels",
   COMPLAINTS = "complaints",

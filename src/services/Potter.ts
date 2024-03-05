@@ -63,14 +63,15 @@ export default class PotterService {
     });
   }
 
-  async findAll() {
+  async findAll(params?: { hasHostel: boolean }) {
+    const { hasHostel } = params ?? {};
     return new Promise<Potter[]>(async (resolve, reject) => {
       try {
         if (!this.user) throw new Error("You need to be logged in");
 
         const q = query(collection(this.db, COLLECTION.POTTERS));
         const querySnapshot = await getDocs(q);
-        const potters: Potter[] = [];
+        let potters: Potter[] = [];
 
         querySnapshot.forEach((doc) => {
           const data = doc.data();
@@ -88,6 +89,12 @@ export default class PotterService {
               const hostel = { ...data, id: hostelSnapshot.id } as Hostel;
               potters[i].hostel = hostel;
             }
+          }
+
+          if (hasHostel === true) {
+            potters = potters.filter((potter) => !!potter?.hostelId);
+          } else if (hasHostel === false) {
+            potters = potters.filter((potter) => !potter?.hostelId);
           }
           resolve(potters);
         })();

@@ -1,18 +1,18 @@
 "use client"
-import BursarDashboard from "@/components/UI/BursarDashboard";
+import ManagerDashboard from "@/components/UI/ManagerDashboard";
 import AddPotter from "./AddPotter";
 import PotterTable from "@/components/UI/PotterTable";
 import useFetcher from "@/hooks/useFetcher";
 import { Potter } from "@/types";
 import { useEffect, useState } from "react";
-import useBursar from "@/store/bursar/useBursar";
+import useManager from "@/store/manager/useManager";
 import PotterService from "@/services/Potter";
 import { toast } from "react-toastify";
 import Spinner from "@/components/Spinner";
 
 export default function PottersPage() {
   const fetcher = useFetcher<Potter[]>([]);
-  const { loading } = useBursar();
+  const { loading } = useManager();
   const [potters, setPotters] = useState<Potter[]>([]);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function PottersPage() {
   }, [fetcher.data]);
 
   return (
-    <BursarDashboard active="potters">
+    <ManagerDashboard active="potters">
       <main>
         <AddPotter />
 
@@ -56,6 +56,6 @@ export default function PottersPage() {
           <PotterTable potters={potters} />
         ) : null}
       </main>
-    </BursarDashboard>
+    </ManagerDashboard>
   );
 }

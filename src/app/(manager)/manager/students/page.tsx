@@ -1,17 +1,17 @@
 "use client";
-import BursarDashboard from "@/components/UI/BursarDashboard";
+import ManagerDashboard from "@/components/UI/ManagerDashboard";
 import useFetcher from "@/hooks/useFetcher";
 import { useEffect, useState } from "react";
 import StudentService from "@/services/Student";
 import { Student } from "@/types";
 import { toast } from "react-toastify";
-import useBursar from "@/store/bursar/useBursar";
+import useManager from "@/store/manager/useManager";
 import Spinner from "@/components/Spinner";
 import StudentsTable from "@/components/UI/StudentsTable";
 
 export default function StudentsPage() {
   const fetcher = useFetcher<Student[]>([]);
-  const { loading } = useBursar();
+  const { loading } = useManager();
   const [students, setStudents] = useState<Student[]>([]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function StudentsPage() {
   }, [fetcher.data]);
 
   return (
-    <BursarDashboard active="students">
+    <ManagerDashboard active="students">
       <main>
         {fetcher.loading && students.length === 0 ? (
           <div className="mt-5 flex items-center w-full justify-center flex-col gap-4">
@@ -53,6 +53,6 @@ export default function StudentsPage() {
           <StudentsTable students={students} />
         ) : null}
       </main>
-    </BursarDashboard>
+    </ManagerDashboard>
   );
 }
