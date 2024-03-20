@@ -51,7 +51,7 @@ export default function PotterContextProvider({
               setLoggedIn(true);
             })
             .catch((err) => {
-              toast.error("Failed to fetch potter profile");
+              // toast.error("Failed to fetch potter profile");
             })
             .finally(() => {
               setLoading(false);

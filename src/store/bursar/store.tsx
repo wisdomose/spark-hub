@@ -51,7 +51,7 @@ export default function BursarContextProvider({
               setLoggedIn(true);
             })
             .catch((err) => {
-              toast.error("Failed to fetch bursar profile");
+              // toast.error("Failed to fetch bursar profile");
             })
             .finally(() => {
               setLoading(false);

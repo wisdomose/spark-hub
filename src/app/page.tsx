@@ -2,10 +2,19 @@
 import Button from "@/components/Button";
 import Checkbox from "@/components/Checkbox";
 import Input from "@/components/Input";
+import Loader from "@/components/Loader";
 import useFetcher from "@/hooks/useFetcher";
 import BursarService from "@/services/Bursar";
 import ManagerService from "@/services/Manager";
 import StudentService from "@/services/Student";
+import BursarContextProvider from "@/store/bursar/store";
+import useBursar from "@/store/bursar/useBursar";
+import ManagerContextProvider from "@/store/manager/store";
+import useManager from "@/store/manager/useManager";
+import PotterContextProvider from "@/store/potter/store";
+import usePotter from "@/store/potter/usePotter";
+import StudentContextProvider from "@/store/student/store";
+import useStudent from "@/store/student/useStudent";
 import { Student } from "@/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,6 +22,51 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function HomesPage() {
+  return (
+    <BursarContextProvider>
+      <StudentContextProvider>
+        <PotterContextProvider>
+          <ManagerContextProvider>
+            <Wrapper />
+          </ManagerContextProvider>
+        </PotterContextProvider>
+      </StudentContextProvider>
+    </BursarContextProvider>
+  );
+}
+
+function Wrapper() {
+  const bursar = useBursar();
+  const potter = usePotter();
+  const student = useStudent();
+  const manager = useManager();
+  const router = useRouter();
+  useEffect(() => {
+    if (bursar.user !== null) {
+      router.replace("/bursar/dashboard");
+    } else if (potter.user !== null) {
+      router.replace("/potter/hostel");
+    } else if (student.user !== null) {
+      router.replace("/student/dashboard");
+    } else if (manager.user !== null) {
+      router.replace("/manager/dashboard");
+    }
+  }, [bursar.user, potter.user, student.user, manager.user]);
+
+  if (bursar.loading || potter.loading || student.loading || manager.loading)
+    return <Loader label="Checking login status" />;
+
+  if (
+    bursar.user !== null ||
+    potter.user !== null ||
+    student.user !== null ||
+    manager.user !== null
+  )
+    return <Loader label="You will be redirected shortly" />;
+  return <Signup />;
+}
+
+function Signup() {
   const {
     wrapper,
     loading,
@@ -232,10 +286,7 @@ export default function HomesPage() {
 
       <p className="text-center mt-5">
         Already have an account?{" "}
-        <Link
-          href="/login/"
-          className="text-primary-base"
-        >
+        <Link href="/login/" className="text-primary-base">
           Login here
         </Link>
       </p>

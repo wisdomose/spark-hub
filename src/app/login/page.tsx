@@ -6,6 +6,12 @@ import useFetcher from "@/hooks/useFetcher";
 import useInput from "@/hooks/useInput";
 import BursarService from "@/services/Bursar";
 import UserService, { LoginResponse } from "@/services/User";
+import BursarContextProvider from "@/store/bursar/store";
+import useBursar from "@/store/bursar/useBursar";
+import ManagerContextProvider from "@/store/manager/store";
+import useManager from "@/store/manager/useManager";
+import PotterContextProvider from "@/store/potter/store";
+import usePotter from "@/store/potter/usePotter";
 import StudentContextProvider from "@/store/student/store";
 import useStudent from "@/store/student/useStudent";
 import { ROLES } from "@/types/types";
@@ -14,12 +20,49 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export default function HomesPage() {
+export default function LoginPage() {
   return (
-    // <StudentContextProvider>
-    <Login />
-    // </StudentContextProvider>
+    <BursarContextProvider>
+      <StudentContextProvider>
+        <PotterContextProvider>
+          <ManagerContextProvider>
+            <Wrapper />
+          </ManagerContextProvider>
+        </PotterContextProvider>
+      </StudentContextProvider>
+    </BursarContextProvider>
   );
+}
+
+function Wrapper() {
+  const bursar = useBursar();
+  const potter = usePotter();
+  const student = useStudent();
+  const manager = useManager();
+  const router = useRouter();
+  useEffect(() => {
+    if (bursar.user !== null) {
+      router.replace("/bursar/dashboard");
+    } else if (potter.user !== null) {
+      router.replace("/potter/hostel");
+    } else if (student.user !== null) {
+      router.replace("/student/dashboard");
+    } else if (manager.user !== null) {
+      router.replace("/manager/dashboard");
+    }
+  }, [bursar.user, potter.user, student.user, manager.user]);
+
+  if (bursar.loading || potter.loading || student.loading || manager.loading)
+    return <Loader label="Checking login status" />;
+
+  if (
+    bursar.user !== null ||
+    potter.user !== null ||
+    student.user !== null ||
+    manager.user !== null
+  )
+    return <Loader label="You will be redirected shortly" />;
+  return <Login />;
 }
 
 function Login() {

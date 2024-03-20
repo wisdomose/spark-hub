@@ -50,7 +50,7 @@ export default function ManagerContextProvider({
               setLoggedIn(true);
             })
             .catch((err) => {
-              toast.error("Failed to fetch manager profile");
+              // toast.error("Failed to fetch manager profile");
             })
             .finally(() => {
               setLoading(false);

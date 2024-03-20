@@ -51,7 +51,7 @@ export default function StudentContextProvider({
               setLoggedIn(true);
             })
             .catch((err) => {
-              toast.error("Failed to fetch student profile");
+              // toast.error("Failed to fetch student profile");
             })
             .finally(() => {
               setLoading(false);
