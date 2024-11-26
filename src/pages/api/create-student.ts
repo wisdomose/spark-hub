@@ -46,12 +46,12 @@ export default async function handler(
           );
 
     const firebaseConfig = {
-      apiKey: "AIzaSyCviR8p6PChRKE3kRysmQCWameWUpDKrz8",
-      authDomain: "spark-hub-ed898.firebaseapp.com",
-      projectId: "spark-hub-ed898",
-      storageBucket: "spark-hub-ed898.appspot.com",
-      messagingSenderId: "287491742340",
-      appId: "1:287491742340:web:863951388483c041e380d1",
+  apiKey: "AIzaSyAJS0-8QpfmoV7GBWAM6zFBbR3gsNSiaCM",
+  authDomain: "hostel-5d49b.firebaseapp.com",
+  projectId: "hostel-5d49b",
+  storageBucket: "hostel-5d49b.firebasestorage.app",
+  messagingSenderId: "127910766264",
+  appId: "1:127910766264:web:7bdc561516216f86d1364d"
     };
 
     initializeClientApp(firebaseConfig);
